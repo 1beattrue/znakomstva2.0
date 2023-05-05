@@ -61,23 +61,27 @@ public class Login extends AppCompatActivity {
                 password = String.valueOf(binding.password.getText());
 
                 if (TextUtils.isEmpty(email)) {
+                    binding.progressBar.setVisibility(View.GONE);
                     Toast.makeText(Login.this, "Enter email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 // Проверяем правильность формата адреса электронной почты с помощью регулярного выражения
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    binding.progressBar.setVisibility(View.GONE);
                     Toast.makeText(Login.this, "Invalid email format", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 // Проверяем длину пароля
                 if (password.length() < 8) {
+                    binding.progressBar.setVisibility(View.GONE);
                     Toast.makeText(Login.this, "Password should be at least 8 characters long", Toast.LENGTH_SHORT).show();
                     return;
                 }

@@ -10,5 +10,5 @@
     <string name="click_to_login">Click to login</string>
     <string name="click_to_register">Click to register</string>
     <string name="logout">Logout</string>
-    <string name="click_to_logout">Click to logout</string>
+    <string name="profile_name">Profile name</string>
 </resources>
