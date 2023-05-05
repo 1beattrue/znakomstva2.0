@@ -24,7 +24,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
-            android:maxLines="1"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
@@ -37,7 +38,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
-            android:maxLines="1"
+            android:singleLine="true"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
