@@ -8,23 +8,18 @@
     tools:context=".ui.chat.ChatFragment">
 
     <!-- Окно просмотра сообщений -->
-    <ScrollView
-        android:id="@+id/messageScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messageRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="200dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="200dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/messageInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/messageLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-    </ScrollView>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_message" />
 
     <!-- Строка ввода сообщения и кнопка отправки -->
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,14 +5,22 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentChatBinding;
 
@@ -20,7 +28,9 @@ public class ChatFragment extends Fragment {
 
     private FragmentChatBinding binding;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
-    DatabaseReference myRef = database.getReference("message");
+    DatabaseReference myRef = database.getReference("messages");
+
+    ArrayList<ChatMessage> messages = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +39,42 @@ public class ChatFragment extends Fragment {
 
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        binding.messageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        DataAdapter dataAdapter = new DataAdapter(getContext(), messages);
+        binding.messageRecyclerView.setAdapter(dataAdapter);
+
+        // Добавляем слушатель событий
+        myRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                // Получаем новое сообщение
+                ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                messages.add(message);
+                dataAdapter.notifyDataSetChanged();
+                binding.messageRecyclerView.smoothScrollToPosition(messages.size());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                // Обработка изменения сообщения
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                // Обработка удаления сообщения
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                // Обработка перемещения сообщения
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Обработка ошибок
+            }
+        });
 
         binding.sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
