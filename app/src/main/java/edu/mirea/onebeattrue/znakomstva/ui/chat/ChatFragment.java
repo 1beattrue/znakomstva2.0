@@ -1,11 +1,11 @@
 package edu.mirea.onebeattrue.znakomstva.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentChatBinding;
 
@@ -46,6 +48,7 @@ public class ChatFragment extends Fragment {
 
         // Добавляем слушатель событий
         myRef.addChildEventListener(new ChildEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
                 // Получаем новое сообщение
@@ -93,7 +96,19 @@ public class ChatFragment extends Fragment {
         if (!TextUtils.isEmpty(message)) {
             // Отправка сообщения в Firebase
             String messageId = myRef.push().getKey();
-            ChatMessage newMessage = new ChatMessage(message, FirebaseAuth.getInstance().getCurrentUser().getUid());
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            String name;
+            assert user != null;
+            if (!Objects.equals(user.getDisplayName(), "")) {
+                name = user.getDisplayName();
+            }
+            else {
+                name = user.getEmail();
+            }
+
+            ChatMessage newMessage = new ChatMessage(message, name);
+            assert messageId != null;
             myRef.child(messageId).setValue(newMessage);
 
             // Очистка поля ввода сообщения
