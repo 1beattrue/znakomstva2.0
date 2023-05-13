@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DateFormat;
@@ -19,6 +20,7 @@ import edu.mirea.onebeattrue.znakomstva.databinding.ItemEventBinding;
 public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     ArrayList<NewEvent> events;
     FirebaseUser user;
+    FirebaseAuth auth;
 
     public DataAdapterEvent(Context context, ArrayList<NewEvent> events) {
         this.events = events;
@@ -40,6 +42,10 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         holder.binding.eventTime.setText(event.getEventTime());
         holder.binding.eventLocation.setText(event.getEventPlace());
 
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        assert user != null;
         if (user.getUid().equals(event.getUser())) {
             holder.binding.editEventButton.setVisibility(View.VISIBLE);
         }

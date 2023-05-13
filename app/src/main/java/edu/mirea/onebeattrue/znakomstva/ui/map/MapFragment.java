@@ -50,12 +50,14 @@ public class MapFragment extends Fragment {
         // Добавляем слушатель событий
         myRef.addChildEventListener(new ChildEventListener() {
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
                 // Получаем нове мероприятие
                 NewEvent event = dataSnapshot.getValue(NewEvent.class);
                 events.add(event);
                 dataAdapterEvent.notifyDataSetChanged();
+                System.out.println(events.size());
                 binding.eventRecyclerView.smoothScrollToPosition(events.size());
             }
 

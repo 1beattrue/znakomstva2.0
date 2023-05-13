@@ -48,7 +48,7 @@ public class EventActivity extends AppCompatActivity {
                 NewEvent newEvent = new NewEvent(eventUser, eventName, eventDescription, eventTime, eventPlace);
                 myRef.child(eventId).setValue(newEvent);
 
-                Intent intent = new Intent(getApplicationContext(), MapFragment.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }
