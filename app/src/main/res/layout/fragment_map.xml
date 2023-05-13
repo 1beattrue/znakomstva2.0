@@ -6,17 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
+    <!-- Окно просмотра сообщений -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eventRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="200dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/addNewEventButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_event" />
+
+    <Button
+        android:id="@+id/addNewEventButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_event"
+        android:layout_marginBottom="128dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

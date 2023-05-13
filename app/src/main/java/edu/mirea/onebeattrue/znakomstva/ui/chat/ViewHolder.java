@@ -1,8 +1,5 @@
 package edu.mirea.onebeattrue.znakomstva.ui.chat;
 
-import android.view.View;
-
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.ItemMessageBinding;
