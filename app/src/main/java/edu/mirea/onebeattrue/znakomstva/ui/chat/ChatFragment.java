@@ -20,11 +20,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentChatBinding;
+import edu.mirea.onebeattrue.znakomstva.ui.account.CurrentUser;
 
 public class ChatFragment extends Fragment {
 
@@ -98,16 +100,10 @@ public class ChatFragment extends Fragment {
             String messageId = myRef.push().getKey();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            String name;
-            assert user != null;
-            if (!Objects.equals(user.getDisplayName(), "")) {
-                name = user.getDisplayName();
-            }
-            else {
-                name = user.getEmail();
-            }
-
-            ChatMessage newMessage = new ChatMessage(message, name);
+            // TODO: 13.05.2023 передать информацию о имени пользователя из фрагмента Account 
+            String username = user.getEmail();
+            
+            ChatMessage newMessage = new ChatMessage(message, username);
             assert messageId != null;
             myRef.child(messageId).setValue(newMessage);
 

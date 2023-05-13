@@ -1,5 +1,6 @@
 package edu.mirea.onebeattrue.znakomstva.ui.account;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,25 +11,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentAccountBinding;
 import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
+import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     FirebaseAuth auth;
     FirebaseUser user;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
+    DatabaseReference myRef = database.getReference("users");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +52,7 @@ public class AccountFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+
         if (user == null) {
             Intent intent = new Intent(getContext(), Login.class);
             startActivity(intent);
@@ -46,13 +60,36 @@ public class AccountFragment extends Fragment {
         }
         else {
             binding.userDetails.setText(user.getEmail());
-        }
 
-        binding.userNameTextView.setText("UnknownUser");
-        binding.userNameEditTextView.setText("");
-        if (!Objects.equals(user.getDisplayName(), "")) {
-            binding.userNameTextView.setText(user.getDisplayName());
-            binding.userNameEditTextView.setText(user.getDisplayName());
+            // Добавляем слушатель событий
+            myRef.orderByKey().equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.exists()) {
+                        //Key exists
+                        for (DataSnapshot userID: dataSnapshot.getChildren()) {
+                            if (Objects.equals(userID.getKey(), user.getUid()))
+                            {
+                                CurrentUser currentUser = userID.getValue(CurrentUser.class);
+                                assert currentUser != null;
+                                binding.userNameTextView.setText(currentUser.getUserName());
+                            }
+
+                        }
+                    } else {
+                        //Key does not exist
+                        CurrentUser currentUser = new CurrentUser(user.getEmail(), "noname");
+                        myRef.child(user.getUid()).setValue(currentUser);
+                        binding.userNameTextView.setText(currentUser.getUserName());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         binding.editUserNameBtn.setOnClickListener(new View.OnClickListener() {
@@ -72,20 +109,9 @@ public class AccountFragment extends Fragment {
                 username = String.valueOf(binding.userNameEditTextView.getText());
 
                 if (!username.isEmpty()) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(username)
-                            .build();
-
-                    assert user != null;
-                    user.updateProfile(profileUpdates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Username updated successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                    CurrentUser currentUser = new CurrentUser(user.getEmail(), username);
+                    myRef.child(user.getUid()).setValue(currentUser);
+                    binding.userNameTextView.setText(currentUser.getUserName());
 
                     binding.userNameTextView.setText(username);
                     binding.userNameEditTextView.setVisibility(View.GONE);
