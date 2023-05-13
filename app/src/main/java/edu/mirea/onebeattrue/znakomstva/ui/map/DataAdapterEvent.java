@@ -2,10 +2,13 @@ package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import edu.mirea.onebeattrue.znakomstva.databinding.ItemEventBinding;
 
 public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     ArrayList<NewEvent> events;
+    FirebaseUser user;
 
     public DataAdapterEvent(Context context, ArrayList<NewEvent> events) {
         this.events = events;
@@ -30,11 +34,15 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolderEvent holder, int position) {
         NewEvent event = events.get(position);
+
         holder.binding.eventTitle.setText(event.getEventName());
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
-        String eventTimeString = dateFormat.format(new Date(event.getEventTime()));
-        holder.binding.eventTimeLocation.setText(eventTimeString);
         holder.binding.eventDescription.setText(event.getEventDescription());
+        holder.binding.eventTime.setText(event.getEventTime());
+        holder.binding.eventLocation.setText(event.getEventPlace());
+
+        if (user.getUid().equals(event.getUser())) {
+            holder.binding.editEventButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -28,7 +28,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/eventTimeLocation"
+        android:id="@+id/eventTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/event_time"
@@ -39,14 +39,14 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/eventPlaceLocation"
+        android:id="@+id/eventLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/event_place"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventTimeLocation"
+        app:layout_constraintTop_toBottomOf="@id/eventTime"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:text="@string/event_edit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventPlaceLocation"
+        app:layout_constraintTop_toBottomOf="@id/eventLocation"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:text="@string/event_repost"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventPlaceLocation"
+        app:layout_constraintTop_toBottomOf="@id/eventLocation"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
