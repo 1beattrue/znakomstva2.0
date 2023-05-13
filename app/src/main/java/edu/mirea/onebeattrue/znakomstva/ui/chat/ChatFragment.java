@@ -57,7 +57,7 @@ public class ChatFragment extends Fragment {
                 ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                 messages.add(message);
                 dataAdapter.notifyDataSetChanged();
-                binding.messageRecyclerView.smoothScrollToPosition(messages.size());
+                binding.messageRecyclerView.smoothScrollToPosition(messages.size()); // вылет после отправки 1 сообщения
             }
 
             @Override
@@ -95,7 +95,7 @@ public class ChatFragment extends Fragment {
 
     private void sendMessage(String message) {
         // Проверка, что сообщение не пустое
-        if (!TextUtils.isEmpty(message)) {
+        if (!TextUtils.isEmpty(message) && message.trim().length() != 0) {
             // Отправка сообщения в Firebase
             String messageId = myRef.push().getKey();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -103,7 +103,7 @@ public class ChatFragment extends Fragment {
             // TODO: 13.05.2023 передать информацию о имени пользователя из фрагмента Account 
             String username = user.getEmail();
             
-            ChatMessage newMessage = new ChatMessage(message, username);
+            ChatMessage newMessage = new ChatMessage(message.trim(), username);
             assert messageId != null;
             myRef.child(messageId).setValue(newMessage);
 
