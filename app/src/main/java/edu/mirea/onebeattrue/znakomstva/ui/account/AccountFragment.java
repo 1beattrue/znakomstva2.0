@@ -3,6 +3,8 @@ package edu.mirea.onebeattrue.znakomstva.ui.account;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +39,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.util.Objects;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentAccountBinding;
@@ -43,6 +53,10 @@ import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class AccountFragment extends Fragment {
+    // Получение ссылки на хранилище Firebase Storage
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
@@ -51,7 +65,7 @@ public class AccountFragment extends Fragment {
     FirebaseUser user;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
-    DatabaseReference myRef = database.getReference("users");
+    DatabaseReference usersRef = database.getReference("users");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,16 +80,42 @@ public class AccountFragment extends Fragment {
         if (user == null) {
             Intent intent = new Intent(getContext(), Login.class);
             startActivity(intent);
-            getActivity().finish();
+            requireActivity().finish(); // возможно не будет работать
         }
         else {
+            // отображение email пользователя
             binding.userDetails.setText(user.getEmail());
 
-            // Добавляем слушатель событий
-            myRef.orderByKey().equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
+
+
+            // отображение аватарки
+            // Создание слушателя для получения значения аватарки
+            ValueEventListener avatarListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String avatarUrl = dataSnapshot.getValue(String.class);
 
+                        // Использование библиотеки Picasso для загрузки и отображения аватарки
+                        loadAndDisplayCroppedAvatar(avatarUrl);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Обработка ошибок получения значения аватарки
+                }
+            };
+
+            // Добавление слушателя к узлу аватарки текущего пользователя
+            usersRef.child(user.getUid()).child("avatarUrl").addListenerForSingleValueEvent(avatarListener);
+
+
+            // отображение имени пользователя
+            // Добавляем слушатель событий
+            usersRef.orderByKey().equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
                         //Key exists
                         for (DataSnapshot userID: dataSnapshot.getChildren()) {
@@ -90,7 +130,7 @@ public class AccountFragment extends Fragment {
                     } else {
                         //Key does not exist
                         CurrentUser currentUser = new CurrentUser(user.getEmail(), "noname");
-                        myRef.child(user.getUid()).setValue(currentUser);
+                        usersRef.child(user.getUid()).setValue(currentUser);
                         binding.userNameTextView.setText(currentUser.getUserName());
                     }
                 }
@@ -122,7 +162,7 @@ public class AccountFragment extends Fragment {
                 if (!username.trim().isEmpty()) {
                     username = username.trim();
                     CurrentUser currentUser = new CurrentUser(user.getEmail(), username);
-                    myRef.child(user.getUid()).setValue(currentUser);
+                    usersRef.child(user.getUid()).setValue(currentUser);
                     binding.userNameTextView.setText(currentUser.getUserName());
 
                     binding.userNameTextView.setText(username);
@@ -154,6 +194,10 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        // Получение пути к файлу в Firebase Storage
+        String avatarPath = "avatars/" + user.getUid() + ".jpg";
+        StorageReference avatarRef = storageRef.child(avatarPath);
+
         // Инициализация ActivityResultLauncher
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -161,8 +205,33 @@ public class AccountFragment extends Fragment {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                             Uri imageUri = result.getData().getData();
-                            // Обновление изображения аватарки
-                            binding.avatar.setImageURI(imageUri);
+
+                            // Загрузка файла в Firebase Storage
+                            UploadTask uploadTask = avatarRef.putFile(imageUri);
+
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // Получение URL-адреса загруженной аватарки
+                                    avatarRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri downloadUri) {
+                                            // Сохранение URL-адреса в базе данных
+                                            usersRef.child(user.getUid()).child("avatarUrl").setValue(downloadUri.toString());
+
+                                            // установка аватарки
+                                            loadAndDisplayCroppedAvatar(downloadUri.toString());
+                                            Toast.makeText(requireContext(), "Avatar changed successfully",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Обработка ошибки загрузки аватарки
+                                }
+                            });
                         }
                     }
                 });
@@ -171,6 +240,40 @@ public class AccountFragment extends Fragment {
 
         View root = binding.getRoot();
         return root;
+    }
+
+    private void loadAndDisplayCroppedAvatar(String avatarUrl) {
+        Picasso.get().load(avatarUrl).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                // Обрезка изображения до квадрата
+                Bitmap croppedBitmap = cropToSquare(bitmap);
+                // Установка обрезанного изображения в ImageView
+                binding.avatar.setImageBitmap(croppedBitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                // Обработка ошибки загрузки изображения
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                // Действия перед загрузкой изображения
+            }
+        });
+    }
+
+    // Метод для обрезки изображения до квадрата
+    private Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int size = Math.min(width, height);
+
+        int x = (width - size) / 2;
+        int y = (height - size) / 2;
+
+        return Bitmap.createBitmap(bitmap, x, y, size, size);
     }
 
     private void openImagePicker() {
