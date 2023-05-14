@@ -46,9 +46,10 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         user = auth.getCurrentUser();
 
         assert user != null;
-        if (user.getUid().equals(event.getUser())) {
+        if (user.getUid().equals(event.getUser()))
             holder.binding.editEventButton.setVisibility(View.VISIBLE);
-        }
+        else
+            holder.binding.editEventButton.setVisibility(View.GONE);
     }
 
     @Override

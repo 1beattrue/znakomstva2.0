@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentMapBinding;
+import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.DataAdapter;
 
@@ -57,8 +59,7 @@ public class MapFragment extends Fragment {
                 NewEvent event = dataSnapshot.getValue(NewEvent.class);
                 events.add(event);
                 dataAdapterEvent.notifyDataSetChanged();
-                System.out.println(events.size());
-                binding.eventRecyclerView.smoothScrollToPosition(events.size());
+                // binding.eventRecyclerView.smoothScrollToPosition(events.size()); // вылет с ошибкой после перехода с другого фрагмента
             }
 
             @Override

@@ -6,27 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".ui.account.AccountFragment">
 
-    <TextView
-        android:id="@+id/user_details"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:id="@+id/profile_options_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/profile_name" />
+        android:weightSum="8">
+
+        <TextView
+            android:layout_weight="7"
+            android:id="@+id/user_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/profile_name" />
+
+        <ImageButton
+            android:layout_weight="1"
+            android:id="@+id/logout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_exit_to_app_24"
+            />
+
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/cardView"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="8dp"
         app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="90dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/user_details">
+        app:layout_constraintTop_toBottomOf="@id/profile_options_layout">
 
         <ImageView
             android:id="@+id/avatar"
@@ -36,64 +52,152 @@
 
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:visibility="visible"
-        android:id="@+id/userNameTextView"
+    <ImageButton
+        app:layout_constraintStart_toEndOf="@id/cardView"
+        app:layout_constraintBottom_toBottomOf="@id/cardView"
+        android:id="@+id/changeAvatarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/cardView2"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/username" />
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/userNameEditTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/cardView2"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="" />
-
-    <Button
-        android:visibility="visible"
-        android:id="@+id/editUserNameBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/edit"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
-
-    <Button
-        android:visibility="gone"
-        android:id="@+id/saveUserNameBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/save"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
-
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logout"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_edit"
         />
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:id="@+id/username_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_weight="7"
+            android:visibility="visible"
+            android:id="@+id/userNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/username" />
+
+        <EditText
+            android:layout_weight="7"
+            android:maxLength="16"
+            android:visibility="gone"
+            android:id="@+id/userNameEditTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="" />
+
+        <ImageButton
+            android:layout_weight="1"
+            android:visibility="visible"
+            android:id="@+id/editUserNameBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit" />
+
+        <ImageButton
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:id="@+id/saveUserNameBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_check_box_24" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/username_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="24sp"
+            android:id="@+id/choose_category_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/favorite_categories_text" />
+
+        <LinearLayout
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/choose_category_text">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/check_box1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/music_concerts" />
+
+                <CheckBox
+                    android:id="@+id/check_box2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sports_events" />
+
+                <CheckBox
+                    android:id="@+id/check_box3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/art_and_exhibitions" />
+
+                <CheckBox
+                    android:id="@+id/check_box4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/movies_and_theater" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/check_box5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/educational_events" />
+
+                <CheckBox
+                    android:id="@+id/check_box6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/social_events" />
+
+                <CheckBox
+                    android:id="@+id/check_box7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/culinary_events" />
+
+                <CheckBox
+                    android:id="@+id/check_box8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/technology_and_innovation" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

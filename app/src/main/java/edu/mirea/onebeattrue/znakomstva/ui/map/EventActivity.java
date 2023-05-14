@@ -73,13 +73,16 @@ public class EventActivity extends AppCompatActivity {
 
                 NewEvent newEvent = new NewEvent(eventUser, eventName.trim(), eventDescription.trim(), eventTime.trim(), eventPlace.trim());
                 myRef.child(eventId).setValue(newEvent);
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                Toast.makeText(EventActivity.this, "Event successfully added",
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

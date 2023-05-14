@@ -112,4 +112,13 @@
     <string name="event_edit">Edit</string>
     <string name="event_repost">Invite</string>
     <string name="add_event">Add</string>
+    <string name="favorite_categories_text">Favorite categories of events</string>
+    <string name="music_concerts">Music Concerts</string>
+    <string name="sports_events">Sports Events</string>
+    <string name="art_and_exhibitions">Art and Exhibitions</string>
+    <string name="movies_and_theater">Movies and Theater</string>
+    <string name="educational_events">Educational Events</string>
+    <string name="social_events">Social Events</string>
+    <string name="culinary_events">Culinary Events</string>
+    <string name="technology_and_innovation">Technology and Innovation</string>
 </resources>

@@ -1,15 +1,23 @@
 package edu.mirea.onebeattrue.znakomstva.ui.account;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,6 +43,8 @@ import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class AccountFragment extends Fragment {
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     private FragmentAccountBinding binding;
     FirebaseAuth auth;
@@ -95,6 +105,7 @@ public class AccountFragment extends Fragment {
         binding.editUserNameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.userNameEditTextView.setText("");
                 binding.userNameTextView.setVisibility(View.GONE);
                 binding.editUserNameBtn.setVisibility(View.GONE);
                 binding.userNameEditTextView.setVisibility(View.VISIBLE);
@@ -108,7 +119,8 @@ public class AccountFragment extends Fragment {
                 String username;
                 username = String.valueOf(binding.userNameEditTextView.getText());
 
-                if (!username.isEmpty()) {
+                if (!username.trim().isEmpty()) {
+                    username = username.trim();
                     CurrentUser currentUser = new CurrentUser(user.getEmail(), username);
                     myRef.child(user.getUid()).setValue(currentUser);
                     binding.userNameTextView.setText(currentUser.getUserName());
@@ -118,8 +130,10 @@ public class AccountFragment extends Fragment {
                     binding.saveUserNameBtn.setVisibility(View.GONE);
                     binding.userNameTextView.setVisibility(View.VISIBLE);
                     binding.editUserNameBtn.setVisibility(View.VISIBLE);
+                    Toast.makeText(getContext(), "Username changed successfully", Toast.LENGTH_SHORT).show();
                 }
-                else Toast.makeText(getContext(), "Enter username", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getContext(), "Enter username", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -133,8 +147,35 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        binding.changeAvatarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImagePicker();
+            }
+        });
+
+        // Инициализация ActivityResultLauncher
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Uri imageUri = result.getData().getData();
+                            // Обновление изображения аватарки
+                            binding.avatar.setImageURI(imageUri);
+                        }
+                    }
+                });
+
+
+
         View root = binding.getRoot();
         return root;
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        imagePickerLauncher.launch(intent);
     }
 
     @Override
