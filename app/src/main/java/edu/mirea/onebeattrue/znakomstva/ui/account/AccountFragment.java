@@ -85,8 +85,7 @@ public class AccountFragment extends Fragment {
         else {
             // отображение email пользователя
             binding.userDetails.setText(user.getEmail());
-
-
+            usersRef.child(user.getUid()).child("email").setValue(user.getEmail());
 
             // отображение аватарки
             // Создание слушателя для получения значения аватарки
@@ -97,7 +96,7 @@ public class AccountFragment extends Fragment {
                         String avatarUrl = dataSnapshot.getValue(String.class);
 
                         // Использование библиотеки Picasso для загрузки и отображения аватарки
-                        loadAndDisplayCroppedAvatar(avatarUrl);
+                        Picasso.get().load(avatarUrl).into(binding.avatar);
                     }
                 }
 
@@ -112,34 +111,24 @@ public class AccountFragment extends Fragment {
 
 
             // отображение имени пользователя
-            // Добавляем слушатель событий
-            usersRef.orderByKey().equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
+            // Создание слушателя для получения значения имени пользователя
+            ValueEventListener usernameListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()) {
-                        //Key exists
-                        for (DataSnapshot userID: dataSnapshot.getChildren()) {
-                            if (Objects.equals(userID.getKey(), user.getUid()))
-                            {
-                                CurrentUser currentUser = userID.getValue(CurrentUser.class);
-                                assert currentUser != null;
-                                binding.userNameTextView.setText(currentUser.getUserName());
-                            }
-
-                        }
-                    } else {
-                        //Key does not exist
-                        CurrentUser currentUser = new CurrentUser(user.getEmail(), "noname");
-                        usersRef.child(user.getUid()).setValue(currentUser);
-                        binding.userNameTextView.setText(currentUser.getUserName());
+                    if (dataSnapshot.exists()) {
+                        String username = dataSnapshot.getValue(String.class);
+                        binding.userNameTextView.setText(username);
                     }
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
+                public void onCancelled(DatabaseError databaseError) {
+                    // Обработка ошибок получения значения имени пользователя
                 }
-            });
+            };
+
+            // Добавление слушателя к узлу аватарки текущего пользователя
+            usersRef.child(user.getUid()).child("userName").addListenerForSingleValueEvent(usernameListener);
         }
 
         binding.editUserNameBtn.setOnClickListener(new View.OnClickListener() {
@@ -161,9 +150,8 @@ public class AccountFragment extends Fragment {
 
                 if (!username.trim().isEmpty()) {
                     username = username.trim();
-                    CurrentUser currentUser = new CurrentUser(user.getEmail(), username);
-                    usersRef.child(user.getUid()).setValue(currentUser);
-                    binding.userNameTextView.setText(currentUser.getUserName());
+
+                    usersRef.child(user.getUid()).child("userName").setValue(username);
 
                     binding.userNameTextView.setText(username);
                     binding.userNameEditTextView.setVisibility(View.GONE);
@@ -220,7 +208,7 @@ public class AccountFragment extends Fragment {
                                             usersRef.child(user.getUid()).child("avatarUrl").setValue(downloadUri.toString());
 
                                             // установка аватарки
-                                            loadAndDisplayCroppedAvatar(downloadUri.toString());
+                                            binding.avatar.setImageURI(imageUri);
                                             Toast.makeText(requireContext(), "Avatar changed successfully",
                                                     Toast.LENGTH_SHORT).show();
                                         }
@@ -240,40 +228,6 @@ public class AccountFragment extends Fragment {
 
         View root = binding.getRoot();
         return root;
-    }
-
-    private void loadAndDisplayCroppedAvatar(String avatarUrl) {
-        Picasso.get().load(avatarUrl).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                // Обрезка изображения до квадрата
-                Bitmap croppedBitmap = cropToSquare(bitmap);
-                // Установка обрезанного изображения в ImageView
-                binding.avatar.setImageBitmap(croppedBitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                // Обработка ошибки загрузки изображения
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                // Действия перед загрузкой изображения
-            }
-        });
-    }
-
-    // Метод для обрезки изображения до квадрата
-    private Bitmap cropToSquare(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int size = Math.min(width, height);
-
-        int x = (width - size) / 2;
-        int y = (height - size) / 2;
-
-        return Bitmap.createBitmap(bitmap, x, y, size, size);
     }
 
     private void openImagePicker() {

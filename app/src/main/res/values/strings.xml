@@ -103,7 +103,7 @@
     <string name="type_your_message_here">Type your message here</string>
     <string name="send">Send</string>
     <string name="edit">Edit</string>
-    <string name="username">UnknownUser</string>
+    <string name="username">noname</string>
     <string name="save">Save</string>
     <string name="event_name">Event name</string>
     <string name="event_description">Event description</string>
