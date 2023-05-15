@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentAccountBinding;
@@ -53,6 +56,8 @@ import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class AccountFragment extends Fragment {
+    Map<String, Boolean> interestsMap = new HashMap<>();
+
     // Получение ссылки на хранилище Firebase Storage
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
@@ -129,6 +134,41 @@ public class AccountFragment extends Fragment {
 
             // Добавление слушателя к узлу аватарки текущего пользователя
             usersRef.child(user.getUid()).child("userName").addListenerForSingleValueEvent(usernameListener);
+
+
+            // отображение состояния чекбоксов
+            usersRef.child(user.getUid()).child("interests").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Получение данных из базы данных
+                    if (dataSnapshot.exists()) {
+                        // Обновение состояния чекбоксов на основе данных из базы данных
+                        boolean music = Boolean.TRUE.equals(dataSnapshot.child("music").getValue(Boolean.class));
+                        boolean sport = Boolean.TRUE.equals(dataSnapshot.child("sport").getValue(Boolean.class));
+                        boolean art = Boolean.TRUE.equals(dataSnapshot.child("art").getValue(Boolean.class));
+                        boolean movies = Boolean.TRUE.equals(dataSnapshot.child("movies").getValue(Boolean.class));
+                        boolean education = Boolean.TRUE.equals(dataSnapshot.child("education").getValue(Boolean.class));
+                        boolean social = Boolean.TRUE.equals(dataSnapshot.child("social").getValue(Boolean.class));
+                        boolean culinary = Boolean.TRUE.equals(dataSnapshot.child("culinary").getValue(Boolean.class));
+                        boolean technology = Boolean.TRUE.equals(dataSnapshot.child("technology").getValue(Boolean.class));
+
+                        // Обновите состояние чекбоксов на основе полученных значений
+                        binding.checkBox1.setChecked(music);
+                        binding.checkBox2.setChecked(sport);
+                        binding.checkBox3.setChecked(art);
+                        binding.checkBox4.setChecked(movies);
+                        binding.checkBox5.setChecked(education);
+                        binding.checkBox6.setChecked(social);
+                        binding.checkBox7.setChecked(culinary);
+                        binding.checkBox8.setChecked(technology);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Обработка ошибки чтения данных из базы данных
+                }
+            });
         }
 
         binding.editUserNameBtn.setOnClickListener(new View.OnClickListener() {
@@ -224,10 +264,88 @@ public class AccountFragment extends Fragment {
                     }
                 });
 
+        // Слушатель для чекбокса 1
+        binding.checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("music", isChecked);
+            }
+        });
 
+        // Слушатель для чекбокса 2
+        binding.checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("sport", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 3
+        binding.checkBox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("art", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 4
+        binding.checkBox4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("movies", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 5
+        binding.checkBox5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("education", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 6
+        binding.checkBox6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("social", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 7
+        binding.checkBox7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("culinary", isChecked);
+            }
+        });
+
+        // Слушатель для чекбокса 8
+        binding.checkBox8.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateInterestInDatabase("technology", isChecked);
+            }
+        });
 
         View root = binding.getRoot();
         return root;
+    }
+
+    private void updateInterestInDatabase(String interestKey, boolean isChecked) {
+        usersRef.child(user.getUid()).child("interests").child(interestKey).setValue(isChecked)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Интерес успешно обновлен в базе данных
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Обработка ошибки обновления интереса в базе данных
+                    }
+                });
     }
 
     private void openImagePicker() {

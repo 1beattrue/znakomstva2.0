@@ -54,7 +54,7 @@ public class ChatFragment extends Fragment {
                 ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                 messages.add(message);
                 dataAdapter.notifyDataSetChanged();
-                binding.messageRecyclerView.smoothScrollToPosition(messages.size()); // вылет после отправки 1 сообщения
+                binding.messageRecyclerView.smoothScrollToPosition(dataAdapter.getItemCount() - 1); // вылет после отправки сообщения после перезахода на фрагмент
             }
 
             @Override
