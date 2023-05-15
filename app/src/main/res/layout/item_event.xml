@@ -2,70 +2,91 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
-    <TextView
-        android:id="@+id/eventTitle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_margin="8dp"
+        android:id="@+id/event_information"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/event_name"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" >
 
-    <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="0dp"
+        <EditText
+            android:focusable="false"
+            android:id="@+id/eventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/event_name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:focusable="false"
+            android:id="@+id/eventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/event_description"
+            android:textSize="16sp" />
+
+        <EditText
+            android:focusable="false"
+            android:id="@+id/eventTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/event_time"
+            android:textSize="16sp" />
+
+        <EditText
+            android:focusable="false"
+            android:id="@+id/eventLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/event_place"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="4"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/event_description"
-        android:textSize="16sp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/event_information"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventTitle"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintEnd_toEndOf="parent" >
 
-    <TextView
-        android:id="@+id/eventTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/event_time"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/deleteEventButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/event_delete" />
 
-    <TextView
-        android:id="@+id/eventLocation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/event_place"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventTime"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/editEventButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/event_edit" />
 
-    <Button
-        android:visibility="gone"
-        android:id="@+id/editEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/event_edit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventLocation"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/joinEventButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/event_join" />
 
-    <Button
-        android:id="@+id/inviteEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/event_repost"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventLocation"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/inviteEventButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/event_repost" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

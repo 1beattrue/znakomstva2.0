@@ -1,26 +1,40 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import edu.mirea.onebeattrue.znakomstva.MainActivity;
 import edu.mirea.onebeattrue.znakomstva.databinding.ItemEventBinding;
+import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 
 public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
+    private boolean editButtonInEditMode = true; // установка кнопки в значение редактирования
+
     ArrayList<NewEvent> events;
     FirebaseUser user;
     FirebaseAuth auth;
+
+    DatabaseReference eventsRef = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/")
+            .getReference()
+            .child("events");
 
     public DataAdapterEvent(Context context, ArrayList<NewEvent> events) {
         this.events = events;
@@ -34,7 +48,7 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderEvent holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderEvent holder, @SuppressLint("RecyclerView") int position) {
         NewEvent event = events.get(position);
 
         holder.binding.eventTitle.setText(event.getEventName());
@@ -42,14 +56,96 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         holder.binding.eventTime.setText(event.getEventTime());
         holder.binding.eventLocation.setText(event.getEventPlace());
 
+        // Установка слушателя кликов для кнопки удаления
+        holder.binding.deleteEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                events.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, events.size());
+
+                // Удаление мероприятия из базы данных
+                eventsRef.child(event.getEventId()).removeValue()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Успешно удалено
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Обработка ошибки удаления
+                            }
+                        });
+            }
+        });
+
+        // Установка слушателя кликов для кнопки удаления
+
+        if (editButtonInEditMode) {
+            holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // включение возможности редактирования event'a
+                    editButtonInEditMode = false;
+                    holder.binding.eventTitle.setFocusableInTouchMode(true);
+                    holder.binding.eventDescription.setFocusableInTouchMode(true);
+                    holder.binding.eventTime.setFocusableInTouchMode(true);
+                    holder.binding.eventLocation.setFocusableInTouchMode(true);
+                    holder.binding.editEventButton.setText("Save");
+                    notifyDataSetChanged();
+                }
+            });
+        } else {
+            holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // выключение возможности редактирования event'a
+                    editButtonInEditMode = true;
+                    holder.binding.eventTitle.setFocusable(false);
+                    holder.binding.eventDescription.setFocusable(false);
+                    holder.binding.eventTime.setFocusable(false);
+                    holder.binding.eventLocation.setFocusable(false);
+                    holder.binding.editEventButton.setText("Edit");
+
+                    // редактирование информации в бд
+                    // Проверка, что поле названия мероприятия не пустое
+                    if (!(holder.binding.eventTitle.getText().toString().trim().length() == 0)) {
+                        eventsRef.child(event.getEventId()).child("eventName").setValue(holder.binding.eventTitle.getText().toString().trim());
+                    }
+
+                    // Проверка, что поле описания мероприятия не пустое
+                    if (!(holder.binding.eventDescription.getText().toString().trim().length() == 0)) {
+                        eventsRef.child(event.getEventId()).child("eventDescription").setValue(holder.binding.eventDescription.getText().toString().trim());
+                    }
+
+                    // Проверка, что поле времени мероприятия не пустое
+                    if (!(holder.binding.eventTime.getText().toString().trim().length() == 0)) {
+                        eventsRef.child(event.getEventId()).child("eventTime").setValue(holder.binding.eventTime.getText().toString().trim());
+                    }
+
+                    // Проверка, что поле места мероприятия не пустое
+                    if (!(holder.binding.eventLocation.getText().toString().trim().length() == 0)) {
+                        eventsRef.child(event.getEventId()).child("eventPlace").setValue(holder.binding.eventLocation.getText().toString().trim());
+                    }
+
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        assert user != null;
-        if (user.getUid().equals(event.getUser()))
+        if (user.getUid().equals(event.getEventUser())) {
             holder.binding.editEventButton.setVisibility(View.VISIBLE);
-        else
+            holder.binding.deleteEventButton.setVisibility(View.VISIBLE);
+        }
+        else {
             holder.binding.editEventButton.setVisibility(View.GONE);
+            holder.binding.deleteEventButton.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -1,16 +1,17 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 public class NewEvent {
-    private String user;
+    private String eventId;
+    private String eventUser;
     private String eventName;
     private String eventDescription;
     private String eventTime;
     private String eventPlace;
+    private String eventCategory;
 
     NewEvent() {}
 
-    public NewEvent(String user, String eventName, String eventDescription, String eventTime, String eventPlace) {
-        this.user = user;
+    public NewEvent(String eventName, String eventDescription, String eventTime, String eventPlace) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventTime = eventTime;
@@ -41,16 +42,32 @@ public class NewEvent {
         this.eventTime = eventTime;
     }
 
-    public String getUser() {
-        return user;
+    public String getEventUser() {
+        return eventUser;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setEventUser(String eventUser) {
+        this.eventUser = eventUser;
     }
 
     public String getEventPlace() {
         return eventPlace;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
     }
 
     public void setEventPlace(String eventPlace) {

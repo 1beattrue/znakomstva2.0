@@ -122,4 +122,6 @@
     <string name="culinary_events">Culinary Events</string>
     <string name="technology_and_innovation">Technology and Innovation</string>
     <string name="john_doe">John Doe</string>
+    <string name="event_delete">Delete</string>
+    <string name="event_join">Join</string>
 </resources>

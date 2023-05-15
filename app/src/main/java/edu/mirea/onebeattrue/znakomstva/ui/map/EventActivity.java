@@ -23,7 +23,7 @@ public class EventActivity extends AppCompatActivity {
 
     ActivityEventBinding binding;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
-    DatabaseReference myRef = database.getReference("events");
+    DatabaseReference eventsRef = database.getReference("events");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Отправка мероприятия в Firebase
-                String eventId = myRef.push().getKey();
+                String eventId = eventsRef.push().getKey();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 String eventUser, eventName, eventDescription, eventTime, eventPlace;
@@ -70,9 +70,13 @@ public class EventActivity extends AppCompatActivity {
                 eventDescription = binding.editTextDescription.getText().toString();
                 eventTime = binding.editTextTime.getText().toString();
                 eventPlace = binding.editTextPlace.getText().toString();
+                // eventCategory = "";
 
-                NewEvent newEvent = new NewEvent(eventUser, eventName.trim(), eventDescription.trim(), eventTime.trim(), eventPlace.trim());
-                myRef.child(eventId).setValue(newEvent);
+                NewEvent newEvent = new NewEvent(eventName.trim(), eventDescription.trim(), eventTime.trim(), eventPlace.trim());
+                newEvent.setEventId(eventId);
+                newEvent.setEventUser(eventUser);
+
+                eventsRef.child(eventId).setValue(newEvent);
                 Toast.makeText(EventActivity.this, "Event successfully added",
                         Toast.LENGTH_SHORT).show();
                 finish();
