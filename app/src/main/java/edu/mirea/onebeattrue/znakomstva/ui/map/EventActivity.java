@@ -1,8 +1,11 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +18,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
+import edu.mirea.onebeattrue.znakomstva.R;
 import edu.mirea.onebeattrue.znakomstva.databinding.ActivityEventBinding;
 import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class EventActivity extends AppCompatActivity {
+    String selectedEvent; // Изначально ни одно мероприятие не выбрано
 
     ActivityEventBinding binding;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -32,6 +37,43 @@ public class EventActivity extends AppCompatActivity {
         View root = binding.getRoot();
         setContentView(root);
 
+        // Получение ссылки на RadioGroup из привязки
+        RadioGroup radioGroup = binding.radioGroup;
+
+        // выбор категории мероприятия
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_button1:
+                        selectedEvent = "music";
+                        break;
+                    case R.id.radio_button2:
+                        selectedEvent = "sport";
+                        break;
+                    case R.id.radio_button3:
+                        selectedEvent = "art";
+                        break;
+                    case R.id.radio_button4:
+                        selectedEvent = "movies";
+                        break;
+                    case R.id.radio_button5:
+                        selectedEvent = "education";
+                        break;
+                    case R.id.radio_button6:
+                        selectedEvent = "social";
+                        break;
+                    case R.id.radio_button7:
+                        selectedEvent = "culinary";
+                        break;
+                    case R.id.radio_button8:
+                        selectedEvent = "technology";
+                        break;
+                }
+            }
+        });
+
         binding.addNewEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +81,7 @@ public class EventActivity extends AppCompatActivity {
                 String eventId = eventsRef.push().getKey();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                String eventUser, eventName, eventDescription, eventTime, eventPlace;
+                String eventUser, eventName, eventDescription, eventTime, eventPlace, eventCategory;
 
                 // Проверка, что поле названия мероприятия не пустое
                 if (binding.editTextName.getText().toString().isEmpty() || binding.editTextName.getText().toString().trim().length() == 0) {
@@ -70,11 +112,12 @@ public class EventActivity extends AppCompatActivity {
                 eventDescription = binding.editTextDescription.getText().toString();
                 eventTime = binding.editTextTime.getText().toString();
                 eventPlace = binding.editTextPlace.getText().toString();
-                // eventCategory = "";
+                eventCategory = selectedEvent;
 
                 NewEvent newEvent = new NewEvent(eventName.trim(), eventDescription.trim(), eventTime.trim(), eventPlace.trim());
                 newEvent.setEventId(eventId);
                 newEvent.setEventUser(eventUser);
+                newEvent.setEventCategory(eventCategory);
 
                 eventsRef.child(eventId).setValue(newEvent);
                 Toast.makeText(EventActivity.this, "Event successfully added",
