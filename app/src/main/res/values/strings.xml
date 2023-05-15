@@ -125,4 +125,5 @@
     <string name="event_delete">Delete</string>
     <string name="event_join">Join</string>
     <string name="category">Category</string>
+    <string name="event_date">Event date</string>
 </resources>

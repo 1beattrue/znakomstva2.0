@@ -6,15 +6,17 @@ public class NewEvent {
     private String eventName;
     private String eventDescription;
     private String eventTime;
+    private String eventDate;
     private String eventPlace;
     private String eventCategory;
 
     NewEvent() {}
 
-    public NewEvent(String eventName, String eventDescription, String eventTime, String eventPlace) {
+    public NewEvent(String eventName, String eventDescription, String eventTime, String eventDate, String eventPlace) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventTime = eventTime;
+        this.eventDate = eventDate;
         this.eventPlace = eventPlace;
     }
 
@@ -72,5 +74,13 @@ public class NewEvent {
 
     public void setEventPlace(String eventPlace) {
         this.eventPlace = eventPlace;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
     }
 }

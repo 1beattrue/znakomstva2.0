@@ -31,13 +31,21 @@
             android:text="@string/event_description"
             android:textSize="16sp" />
 
-        <EditText
-            android:focusable="false"
+        <TextView
+            android:enabled="false"
             android:id="@+id/eventTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/event_time"
-            android:textSize="16sp" />
+            android:textSize="24sp" />
+
+        <TextView
+            android:enabled="false"
+            android:id="@+id/eventDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/event_date"
+            android:textSize="24sp" />
 
         <EditText
             android:focusable="false"

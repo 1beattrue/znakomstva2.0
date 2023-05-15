@@ -133,7 +133,7 @@ public class EventActivity extends AppCompatActivity {
                 String eventId = eventsRef.push().getKey();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                String eventUser, eventName, eventDescription, eventTime, eventPlace, eventCategory;
+                String eventUser, eventName, eventDescription, eventTime, eventDate, eventPlace, eventCategory;
 
                 // Проверка, что поле названия мероприятия не пустое
                 if (binding.editTextName.getText().toString().isEmpty() || binding.editTextName.getText().toString().trim().length() == 0) {
@@ -168,11 +168,12 @@ public class EventActivity extends AppCompatActivity {
                 eventUser = user.getUid();
                 eventName = binding.editTextName.getText().toString();
                 eventDescription = binding.editTextDescription.getText().toString();
-                eventTime = binding.editTextTime.getText().toString() + " " + binding.editTextDate.getText().toString();
+                eventTime = binding.editTextTime.getText().toString();
+                eventDate = binding.editTextDate.getText().toString();
                 eventPlace = binding.editTextPlace.getText().toString();
                 eventCategory = selectedEvent;
 
-                NewEvent newEvent = new NewEvent(eventName.trim(), eventDescription.trim(), eventTime.trim(), eventPlace.trim());
+                NewEvent newEvent = new NewEvent(eventName.trim(), eventDescription.trim(), eventTime.trim(), eventDate.trim(), eventPlace.trim());
                 newEvent.setEventId(eventId);
                 newEvent.setEventUser(eventUser);
                 newEvent.setEventCategory(eventCategory);

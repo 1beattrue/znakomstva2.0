@@ -1,11 +1,17 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,13 +29,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
 import edu.mirea.onebeattrue.znakomstva.databinding.ItemEventBinding;
 import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 
 public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
+    private Context context;
+
     private boolean editButtonInEditMode = true; // установка кнопки в значение редактирования
 
     ArrayList<NewEvent> events;
@@ -45,6 +55,7 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             .child("events");
 
     public DataAdapterEvent(Context context, ArrayList<NewEvent> events) {
+        this.context = context;
         this.events = events;
     }
 
@@ -92,35 +103,90 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         holder.binding.eventTitle.setText(event.getEventName());
         holder.binding.eventDescription.setText(event.getEventDescription());
         holder.binding.eventTime.setText(event.getEventTime());
+        holder.binding.eventDate.setText(event.getEventDate());
         holder.binding.eventLocation.setText(event.getEventPlace());
 
         // Установка слушателя кликов для кнопки удаления
         holder.binding.deleteEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                events.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, events.size());
+                // Создание диалогового окна для подтверждения удаления
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Are you sure?");
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Подтверждено удаление - выполнение необходимых действий здесь
+                        events.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, events.size());
 
-                // Удаление мероприятия из базы данных
-                eventsRef.child(event.getEventId()).removeValue()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // Успешно удалено
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Обработка ошибки удаления
-                            }
-                        });
+                        // Удаление мероприятия из базы данных
+                        eventsRef.child(event.getEventId()).removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // Успешно удалено
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Обработка ошибки удаления
+                                    }
+                                });
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 
-        // Установка слушателя кликов для кнопки удаления
+        // изменение времени
+        holder.binding.eventTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
 
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        // Обработка выбранного времени
+                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                        holder.binding.eventTime.setText(selectedTime);
+                    }
+                }, hour, minute, true);
+
+                timePickerDialog.show();
+            }
+        });
+
+        // изменение даты
+        holder.binding.eventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Обработка выбранной даты
+                        String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%02d", dayOfMonth, month + 1, year % 100);
+                        holder.binding.eventDate.setText(selectedDate);
+                    }
+                }, year, month, dayOfMonth);
+
+                datePickerDialog.show();
+            }
+        });
+
+        // Установка слушателя кликов для кнопки редактирования
         if (editButtonInEditMode) {
             holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,7 +195,8 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     editButtonInEditMode = false;
                     holder.binding.eventTitle.setFocusableInTouchMode(true);
                     holder.binding.eventDescription.setFocusableInTouchMode(true);
-                    holder.binding.eventTime.setFocusableInTouchMode(true);
+                    holder.binding.eventTime.setEnabled(true);
+                    holder.binding.eventDate.setEnabled(true);
                     holder.binding.eventLocation.setFocusableInTouchMode(true);
                     holder.binding.editEventButton.setText("Save");
                     notifyDataSetChanged();
@@ -143,7 +210,8 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     editButtonInEditMode = true;
                     holder.binding.eventTitle.setFocusable(false);
                     holder.binding.eventDescription.setFocusable(false);
-                    holder.binding.eventTime.setFocusable(false);
+                    holder.binding.eventTime.setEnabled(false);
+                    holder.binding.eventDate.setEnabled(false);
                     holder.binding.eventLocation.setFocusable(false);
                     holder.binding.editEventButton.setText("Edit");
 
@@ -159,8 +227,13 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     }
 
                     // Проверка, что поле времени мероприятия не пустое
-                    if (!(holder.binding.eventTime.getText().toString().trim().length() == 0)) {
+                    if (!holder.binding.eventTime.getText().toString().equals("Event time")) {
                         eventsRef.child(event.getEventId()).child("eventTime").setValue(holder.binding.eventTime.getText().toString().trim());
+                    }
+
+                    // Проверка, что поле даты мероприятия не пустое
+                    if (!holder.binding.eventDate.getText().toString().equals("Event date")) {
+                        eventsRef.child(event.getEventId()).child("eventDate").setValue(holder.binding.eventDate.getText().toString().trim());
                     }
 
                     // Проверка, что поле места мероприятия не пустое
