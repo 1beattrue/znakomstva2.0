@@ -28,7 +28,10 @@
             android:id="@+id/editTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:minLines="1"
+            android:hint="Enter event name"/>
 
         <TextView
             android:layout_marginBottom="8dp"
@@ -44,7 +47,10 @@
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:minLines="1"
+            android:hint="Enter description"/>
 
         <TextView
             android:layout_marginBottom="8dp"
@@ -55,12 +61,30 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:layout_marginBottom="8dp"
+        <TextView
             android:id="@+id/editTextTime"
+            android:textSize="24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:layout_marginBottom="8dp"
+            android:text="Set event time" />
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:id="@+id/textViewDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event date"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:textSize="24dp"
+            android:id="@+id/editTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set event date" />
 
         <TextView
             android:layout_marginBottom="8dp"
@@ -75,7 +99,10 @@
             android:id="@+id/editTextPlace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:minLines="1"
+            android:hint="Enter event location" />
     </LinearLayout>
 
     <LinearLayout

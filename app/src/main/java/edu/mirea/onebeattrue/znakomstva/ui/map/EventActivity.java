@@ -1,11 +1,15 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
 import edu.mirea.onebeattrue.znakomstva.R;
@@ -36,6 +42,49 @@ public class EventActivity extends AppCompatActivity {
         binding = ActivityEventBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
+
+        // получение даты мероприятия
+        binding.editTextDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EventActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Обработка выбранной даты
+                        String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%02d", dayOfMonth, month + 1, year % 100);
+                        binding.editTextDate.setText(selectedDate);
+                    }
+                }, year, month, dayOfMonth);
+
+                datePickerDialog.show();
+            }
+        });
+
+        // получение времени мероприятия
+        binding.editTextTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        // Обработка выбранного времени
+                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                        binding.editTextTime.setText(selectedTime);
+                    }
+                }, hour, minute, true);
+
+                timePickerDialog.show();
+            }
+        });
 
         // Получение ссылки на RadioGroup из привязки
         RadioGroup radioGroup = binding.radioGroup;
@@ -96,8 +145,14 @@ public class EventActivity extends AppCompatActivity {
                 }
 
                 // Проверка, что поле времени мероприятия не пустое
-                if (binding.editTextTime.getText().toString().isEmpty() || binding.editTextTime.getText().toString().trim().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "Enter event time", Toast.LENGTH_SHORT).show();
+                if (binding.editTextTime.getText().toString().equals("Set event time")) {
+                    Toast.makeText(getApplicationContext(), "Set event time", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Проверка, что поле даты мероприятия не пустое
+                if (binding.editTextDate.getText().toString().equals("Set event date")) {
+                    Toast.makeText(getApplicationContext(), "Set event date", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -110,7 +165,7 @@ public class EventActivity extends AppCompatActivity {
                 eventUser = user.getUid();
                 eventName = binding.editTextName.getText().toString();
                 eventDescription = binding.editTextDescription.getText().toString();
-                eventTime = binding.editTextTime.getText().toString();
+                eventTime = binding.editTextTime.getText().toString() + " " + binding.editTextDate.getText().toString();
                 eventPlace = binding.editTextPlace.getText().toString();
                 eventCategory = selectedEvent;
 

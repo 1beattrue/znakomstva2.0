@@ -84,6 +84,7 @@
             android:text="@string/username" />
 
         <EditText
+            android:hint="Enter username"
             android:layout_weight="7"
             android:maxLength="16"
             android:visibility="gone"
