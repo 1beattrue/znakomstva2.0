@@ -89,6 +89,9 @@ public class EventActivity extends AppCompatActivity {
         // Получение ссылки на RadioGroup из привязки
         RadioGroup radioGroup = binding.radioGroup;
 
+        // установка значения переменной по умолчанию
+        selectedEvent = "music";
+
         // выбор категории мероприятия
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @SuppressLint("NonConstantResourceId")

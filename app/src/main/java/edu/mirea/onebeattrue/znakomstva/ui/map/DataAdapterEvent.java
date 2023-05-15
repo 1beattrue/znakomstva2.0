@@ -2,6 +2,7 @@ package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -31,6 +35,10 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     ArrayList<NewEvent> events;
     FirebaseUser user;
     FirebaseAuth auth;
+
+    DatabaseReference usersRef = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/")
+            .getReference()
+            .child("users");
 
     DatabaseReference eventsRef = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/")
             .getReference()
@@ -50,6 +58,36 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolderEvent holder, @SuppressLint("RecyclerView") int position) {
         NewEvent event = events.get(position);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        DatabaseReference interestsRef = usersRef.child(user.getUid()).child("interests");
+
+        // установка цвета мероприятия в зависимости от интересов пользователя
+        String eventCategory = event.getEventCategory();
+
+        interestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Получение данных интересов пользователя
+                    boolean greenColor = Boolean.TRUE.equals(dataSnapshot.child(eventCategory).getValue(Boolean.class));
+                    // Установка цвета заднего фона в зависимости от переменной greenColor
+                    if (greenColor) {
+                        holder.itemView.setBackgroundColor(Color.GREEN);
+                    } else {
+                        holder.itemView.setBackgroundColor(Color.WHITE);
+                    }
+                } else {
+                    holder.itemView.setBackgroundColor(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Обработка ошибок чтения из базы данных
+            }
+        });
 
         holder.binding.eventTitle.setText(event.getEventName());
         holder.binding.eventDescription.setText(event.getEventDescription());
@@ -134,9 +172,6 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                 }
             });
         }
-
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
 
         if (user.getUid().equals(event.getEventUser())) {
             holder.binding.editEventButton.setVisibility(View.VISIBLE);
