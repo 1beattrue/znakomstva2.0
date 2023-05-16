@@ -54,8 +54,10 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (avatarUrl != null && !avatarUrl.equals(""))
                         Picasso.get().load(avatarUrl).into(holder.binding.avatar);
                     else
-                        Picasso.get().load(R.drawable.default_avatar).into(holder.binding.avatar);
+                        Picasso.get().load(R.drawable.default_profile_picture).into(holder.binding.avatar);
                 }
+                else
+                    Picasso.get().load(R.drawable.default_profile_picture).into(holder.binding.avatar);
             }
 
             @Override
