@@ -6,7 +6,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,6 +109,15 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         holder.binding.eventTime.setText(event.getEventTime());
         holder.binding.eventDate.setText(event.getEventDate());
         holder.binding.eventLocation.setText(event.getEventPlace());
+
+        // Установка слушателя для кнопки присоединения к мероприятию
+        holder.binding.joinEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Здесь будет код для сохранения мероприятия в календаре
+                saveEventToCalendar(event);
+            }
+        });
 
         // Установка слушателя кликов для кнопки удаления
         holder.binding.deleteEventButton.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +266,39 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         else {
             holder.binding.editEventButton.setVisibility(View.GONE);
             holder.binding.deleteEventButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void saveEventToCalendar(NewEvent event) {
+        String eventDateString = event.getEventDate(); // Получаем строку с датой в формате дд/мм/гг
+        String eventTimeString = event.getEventTime(); // Получаем строку с временем в формате чч:мм
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+        try {
+            Date eventDate = dateFormat.parse(eventDateString); // Преобразуем строку даты в объект Date
+            Date eventTime = timeFormat.parse(eventTimeString); // Преобразуем строку времени в объект Date
+
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.setTime(eventDate); // Устанавливаем дату начала мероприятия
+            beginTime.set(Calendar.HOUR_OF_DAY, eventTime.getHours()); // Устанавливаем час начала мероприятия
+            beginTime.set(Calendar.MINUTE, eventTime.getMinutes()); // Устанавливаем минуты начала мероприятия
+
+            int reminderMinutes = 24 * 60;
+
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis()) // Устанавливаем время начала мероприятия
+                    .putExtra(CalendarContract.Events.TITLE, event.getEventName()) // Устанавливаем название мероприятия
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getEventPlace()) // Устанавливаем место проведения мероприятия
+                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getEventDescription()) // Устанавливаем описание мероприятия
+                    .putExtra(CalendarContract.Reminders.MINUTES, reminderMinutes)
+                    .putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);// Устанавливаем напоминание о мероприятии за день до его проведения
+
+            context.startActivity(intent);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 

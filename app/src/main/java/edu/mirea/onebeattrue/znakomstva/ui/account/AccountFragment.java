@@ -2,10 +2,16 @@ package edu.mirea.onebeattrue.znakomstva.ui.account;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -47,6 +53,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -56,6 +63,12 @@ import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 
 public class AccountFragment extends Fragment {
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private boolean isConnected;
+
+
+
     Map<String, Boolean> interestsMap = new HashMap<>();
 
     // Получение ссылки на хранилище Firebase Storage
@@ -78,6 +91,7 @@ public class AccountFragment extends Fragment {
                 new ViewModelProvider(this).get(AccountViewModel.class);
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -113,7 +127,6 @@ public class AccountFragment extends Fragment {
 
             // Добавление слушателя к узлу аватарки текущего пользователя
             usersRef.child(user.getUid()).child("avatarUrl").addListenerForSingleValueEvent(avatarListener);
-
 
             // отображение имени пользователя
             // Создание слушателя для получения значения имени пользователя
@@ -328,7 +341,39 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        View root = binding.getRoot();
+        // Инициализация ConnectivityManager
+        connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Инициализация NetworkCallback
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                isConnected = true;
+                // Обработка доступности интернет-соединения
+                // Удаление загрузочного кольца (если отображается)
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.progressBarAccount.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                isConnected = false;
+                // Обработка потери интернет-соединения
+                // Отображение загрузочного кольца
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.progressBarAccount.setVisibility(View.VISIBLE);
+                        Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+
         return root;
     }
 
@@ -351,6 +396,22 @@ public class AccountFragment extends Fragment {
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Регистрация NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Отмена регистрации NetworkCallback
+        connectivityManager.unregisterNetworkCallback(networkCallback);
     }
 
     @Override

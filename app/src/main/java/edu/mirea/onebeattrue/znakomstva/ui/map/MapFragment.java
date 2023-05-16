@@ -1,7 +1,10 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,9 @@ import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.DataAdapter;
 
 public class MapFragment extends Fragment {
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private boolean isConnected;
 
     private FragmentMapBinding binding;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://znakomstva3030-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -90,12 +96,62 @@ public class MapFragment extends Fragment {
             }
         });
 
+
+        // Инициализация ConnectivityManager
+        connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Инициализация NetworkCallback
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                isConnected = true;
+                // Обработка доступности интернет-соединения
+                // Удаление загрузочного кольца (если отображается)
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.progressBarMap.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                isConnected = false;
+                // Обработка потери интернет-соединения
+                // Отображение загрузочного кольца
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.progressBarMap.setVisibility(View.VISIBLE);
+                        Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+
         return root;
     }
 
     private void addNewEvent() {
         Intent intent = new Intent(getContext(), EventActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Регистрация NetworkCallback
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Отмена регистрации NetworkCallback
+        connectivityManager.unregisterNetworkCallback(networkCallback);
     }
 
     @Override
