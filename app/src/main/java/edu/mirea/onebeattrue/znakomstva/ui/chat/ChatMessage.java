@@ -3,13 +3,16 @@ package edu.mirea.onebeattrue.znakomstva.ui.chat;
 import java.util.Date;
 
 public class ChatMessage {
+    private String avatarUrl;
     private String messageText;
     private String messageUser;
     private long messageTime;
+    private String messageUserId;
 
-    public ChatMessage(String messageText, String messageUser) {
+    public ChatMessage(String messageText, String messageUser, String messageUserId) {
         this.messageText = messageText;
         this.messageUser = messageUser;
+        this.messageUserId = messageUserId;
 
         // Set the current time when the message is created
         messageTime = new Date().getTime();
@@ -41,5 +44,21 @@ public class ChatMessage {
 
     public void setMessageTime(long messageTime) {
         this.messageTime = messageTime;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getMessageUserId() {
+        return messageUserId;
+    }
+
+    public void setMessageUserId(String messageUserId) {
+        this.messageUserId = messageUserId;
     }
 }
