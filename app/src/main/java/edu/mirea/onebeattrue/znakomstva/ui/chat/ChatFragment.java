@@ -106,7 +106,7 @@ public class ChatFragment extends Fragment {
                 ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                 messages.add(message);
                 dataAdapter.notifyDataSetChanged();
-                // binding.messageRecyclerView.smoothScrollToPosition(dataAdapter.getItemCount() - 1); // вылет после отправки сообщения после перезахода на фрагмент
+                // binding.messageRecyclerView.smoothScrollToPosition(messages.size() - 1); // вылет после отправки сообщения после перезахода на фрагмент
             }
 
             @Override
@@ -155,6 +155,12 @@ public class ChatFragment extends Fragment {
             // Очистка поля ввода сообщения
             binding.messageEditText.setText("");
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override

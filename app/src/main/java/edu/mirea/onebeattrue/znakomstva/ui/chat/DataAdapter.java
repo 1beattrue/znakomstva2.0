@@ -1,5 +1,6 @@
 package edu.mirea.onebeattrue.znakomstva.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,15 +44,17 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatMessage msg = messages.get(position);
 
-        // установка аватарки
+        // установка аватарки (при большом количестве сообщений аватарки выставляются рандомно)
         usersRef.child(msg.getMessageUserId()).child("avatarUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String avatarUrl = snapshot.getValue(String.class);
-                    System.out.println(avatarUrl);
                     if (avatarUrl != null && !avatarUrl.equals(""))
                         Picasso.get().load(avatarUrl).into(holder.binding.avatar);
+                    else
+                        Picasso.get().load(R.drawable.default_avatar).into(holder.binding.avatar);
                 }
             }
 
