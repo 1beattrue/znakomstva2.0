@@ -9,6 +9,7 @@ public class NewEvent {
     private String eventDate;
     private String eventPlace;
     private String eventCategory;
+    private boolean editMode;
 
     NewEvent() {}
 
@@ -82,5 +83,13 @@ public class NewEvent {
 
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 }

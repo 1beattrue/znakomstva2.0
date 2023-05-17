@@ -63,6 +63,7 @@ public class MapFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
                 // Получаем нове мероприятие
                 NewEvent event = dataSnapshot.getValue(NewEvent.class);
+                event.setEditMode(true);
                 events.add(event);
                 dataAdapterEvent.notifyDataSetChanged();
                 // binding.eventRecyclerView.smoothScrollToPosition(events.size()); // вылет с ошибкой после перехода с другого фрагмента

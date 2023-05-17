@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
@@ -86,43 +90,27 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        // Получение ссылки на RadioGroup из привязки
-        RadioGroup radioGroup = binding.radioGroup;
+        // Выбор категории мероприятия
+        List<String> categories = Arrays.asList("music", "sport", "art", "movies", "education", "social", "culinary", "technology");
 
-        // установка значения переменной по умолчанию
-        selectedEvent = "music";
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.categorySpinner.setAdapter(adapter);
 
-        // выбор категории мероприятия
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("NonConstantResourceId")
+        // Установка значения по умолчанию (первый вариант)
+        binding.categorySpinner.setSelection(0);
+
+        binding.categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_button1:
-                        selectedEvent = "music";
-                        break;
-                    case R.id.radio_button2:
-                        selectedEvent = "sport";
-                        break;
-                    case R.id.radio_button3:
-                        selectedEvent = "art";
-                        break;
-                    case R.id.radio_button4:
-                        selectedEvent = "movies";
-                        break;
-                    case R.id.radio_button5:
-                        selectedEvent = "education";
-                        break;
-                    case R.id.radio_button6:
-                        selectedEvent = "social";
-                        break;
-                    case R.id.radio_button7:
-                        selectedEvent = "culinary";
-                        break;
-                    case R.id.radio_button8:
-                        selectedEvent = "technology";
-                        break;
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Присвоение выбранного значения переменной selectedEvent
+                selectedEvent = categories.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Действия при отсутствии выбора
+                selectedEvent = categories.get(0);
             }
         });
 

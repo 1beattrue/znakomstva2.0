@@ -44,8 +44,6 @@ import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
     private Context context;
 
-    private boolean editButtonInEditMode = true; // установка кнопки в значение редактирования
-
     ArrayList<NewEvent> events;
     FirebaseUser user;
     FirebaseAuth auth;
@@ -200,12 +198,13 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         });
 
         // Установка слушателя кликов для кнопки редактирования
-        if (editButtonInEditMode) {
+        if (event.isEditMode()) {
             holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // включение возможности редактирования event'a
-                    editButtonInEditMode = false;
+                    // editButtonInEditMode = false;
+                    event.setEditMode(false);
                     holder.binding.eventTitle.setFocusableInTouchMode(true);
                     holder.binding.eventDescription.setFocusableInTouchMode(true);
                     holder.binding.eventTime.setEnabled(true);
@@ -220,7 +219,8 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                 @Override
                 public void onClick(View v) {
                     // выключение возможности редактирования event'a
-                    editButtonInEditMode = true;
+                    // editButtonInEditMode = true;
+                    event.setEditMode(true);
                     holder.binding.eventTitle.setFocusable(false);
                     holder.binding.eventDescription.setFocusable(false);
                     holder.binding.eventTime.setEnabled(false);
