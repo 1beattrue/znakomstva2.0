@@ -128,4 +128,5 @@
     <string name="event_date">Event date</string>
     <string name="number_of_visitors_0">Number of visitors: 0</string>
     <string name="event_leave">Leave</string>
+    <string name="start_text">EVENT</string>
 </resources>
