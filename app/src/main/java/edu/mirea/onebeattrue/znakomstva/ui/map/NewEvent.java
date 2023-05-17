@@ -1,5 +1,7 @@
 package edu.mirea.onebeattrue.znakomstva.ui.map;
 
+import java.util.ArrayList;
+
 public class NewEvent {
     private String eventId;
     private String eventUser;
@@ -10,7 +12,8 @@ public class NewEvent {
     private String eventPlace;
     private String eventCategory;
     private boolean editMode;
-    private int eventVisitors;
+    private int eventNumberOfVisitors;
+    private ArrayList<String> eventVisitors;
 
     NewEvent() {}
 
@@ -94,11 +97,33 @@ public class NewEvent {
         this.editMode = editMode;
     }
 
-    public int getEventVisitors() {
+    public int getEventNumberOfVisitors() {
+        return eventNumberOfVisitors;
+    }
+
+    public void setEventNumberOfVisitors(int eventNumberOfVisitors) {
+        this.eventNumberOfVisitors = eventNumberOfVisitors;
+    }
+
+    public void addVisitor(String visitor) {
+        if (!this.eventVisitors.contains(visitor)) {
+            this.eventNumberOfVisitors++;
+            this.eventVisitors.add(visitor);
+        }
+    }
+
+    public void removeVisitor(String visitor) {
+        if (this.eventVisitors.contains(visitor)) {
+            this.eventNumberOfVisitors--;
+            this.eventVisitors.remove(visitor);
+        }
+    }
+
+    public ArrayList<String> getEventVisitors() {
         return eventVisitors;
     }
 
-    public void setEventVisitors(int eventVisitors) {
+    public void setEventVisitors(ArrayList<String> eventVisitors) {
         this.eventVisitors = eventVisitors;
     }
 }

@@ -103,7 +103,7 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
         });
 
         // Установка количества посетителей
-        String numOfVisitors = String.valueOf(event.getEventVisitors());
+        String numOfVisitors = String.valueOf(event.getEventNumberOfVisitors());
         holder.binding.visitors.setText("Number of visitors: " + numOfVisitors);
 
         holder.binding.eventTitle.setText(event.getEventName());
@@ -118,8 +118,20 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             public void onClick(View v) {
                 // Здесь будет код для сохранения мероприятия в календаре
                 saveEventToCalendar(event);
-                event.setEventVisitors(event.getEventVisitors() + 1);
+                event.addVisitor(user.getUid());
                 eventsRef.child(event.getEventId()).child("eventVisitors").setValue(event.getEventVisitors());
+                eventsRef.child(event.getEventId()).child("eventNumberOfVisitors").setValue(event.getEventNumberOfVisitors());
+                notifyDataSetChanged();
+            }
+        });
+
+        // Установка слушателя для кнопки отсоединения от мероприятия
+        holder.binding.leaveEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                event.removeVisitor(user.getUid());
+                eventsRef.child(event.getEventId()).child("eventVisitors").setValue(event.getEventVisitors());
+                eventsRef.child(event.getEventId()).child("eventNumberOfVisitors").setValue(event.getEventNumberOfVisitors());
                 notifyDataSetChanged();
             }
         });
@@ -270,6 +282,15 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     notifyDataSetChanged();
                 }
             });
+        }
+
+        if (event.getEventVisitors().contains(user.getUid())) {
+            holder.binding.joinEventButton.setVisibility(View.GONE);
+            holder.binding.leaveEventButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.binding.joinEventButton.setVisibility(View.VISIBLE);
+            holder.binding.leaveEventButton.setVisibility(View.GONE);
         }
 
         if (user.getUid().equals(event.getEventUser())) {

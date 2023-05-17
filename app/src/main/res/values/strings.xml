@@ -127,4 +127,5 @@
     <string name="category">Category</string>
     <string name="event_date">Event date</string>
     <string name="number_of_visitors_0">Number of visitors: 0</string>
+    <string name="event_leave">Leave</string>
 </resources>

@@ -166,6 +166,10 @@ public class EventActivity extends AppCompatActivity {
                 newEvent.setEventUser(eventUser);
                 newEvent.setEventCategory(eventCategory);
 
+                ArrayList visitors = new ArrayList();
+                visitors.add("null");
+                newEvent.setEventVisitors(visitors);
+
                 eventsRef.child(eventId).setValue(newEvent);
                 Toast.makeText(EventActivity.this, "Event successfully added",
                         Toast.LENGTH_SHORT).show();

@@ -97,6 +97,14 @@
             android:layout_height="wrap_content"
             android:text="@string/event_join" />
 
+        <Button
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:id="@+id/leaveEventButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/event_leave" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
