@@ -102,6 +102,10 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             }
         });
 
+        // Установка количества посетителей
+        String numOfVisitors = String.valueOf(event.getEventVisitors());
+        holder.binding.visitors.setText("Number of visitors: " + numOfVisitors);
+
         holder.binding.eventTitle.setText(event.getEventName());
         holder.binding.eventDescription.setText(event.getEventDescription());
         holder.binding.eventTime.setText(event.getEventTime());
@@ -114,6 +118,9 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             public void onClick(View v) {
                 // Здесь будет код для сохранения мероприятия в календаре
                 saveEventToCalendar(event);
+                event.setEventVisitors(event.getEventVisitors() + 1);
+                eventsRef.child(event.getEventId()).child("eventVisitors").setValue(event.getEventVisitors());
+                notifyDataSetChanged();
             }
         });
 

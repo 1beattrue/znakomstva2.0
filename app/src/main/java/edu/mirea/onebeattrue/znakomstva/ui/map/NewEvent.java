@@ -10,6 +10,7 @@ public class NewEvent {
     private String eventPlace;
     private String eventCategory;
     private boolean editMode;
+    private int eventVisitors;
 
     NewEvent() {}
 
@@ -91,5 +92,13 @@ public class NewEvent {
 
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
+    }
+
+    public int getEventVisitors() {
+        return eventVisitors;
+    }
+
+    public void setEventVisitors(int eventVisitors) {
+        this.eventVisitors = eventVisitors;
     }
 }
