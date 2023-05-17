@@ -228,30 +228,36 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     holder.binding.eventLocation.setFocusable(false);
                     holder.binding.editEventButton.setText("Edit");
 
-                    // редактирование информации в бд
+                    // редактирование информации в бд и в мероприятии
+
                     // Проверка, что поле названия мероприятия не пустое
                     if (!(holder.binding.eventTitle.getText().toString().trim().length() == 0)) {
                         eventsRef.child(event.getEventId()).child("eventName").setValue(holder.binding.eventTitle.getText().toString().trim());
+                        event.setEventName(holder.binding.eventTitle.getText().toString().trim());
                     }
 
                     // Проверка, что поле описания мероприятия не пустое
                     if (!(holder.binding.eventDescription.getText().toString().trim().length() == 0)) {
                         eventsRef.child(event.getEventId()).child("eventDescription").setValue(holder.binding.eventDescription.getText().toString().trim());
+                        event.setEventDescription(holder.binding.eventDescription.getText().toString().trim());
                     }
 
                     // Проверка, что поле времени мероприятия не пустое
                     if (!holder.binding.eventTime.getText().toString().equals("Event time")) {
                         eventsRef.child(event.getEventId()).child("eventTime").setValue(holder.binding.eventTime.getText().toString().trim());
+                        event.setEventTime(holder.binding.eventTime.getText().toString().trim());
                     }
 
                     // Проверка, что поле даты мероприятия не пустое
                     if (!holder.binding.eventDate.getText().toString().equals("Event date")) {
                         eventsRef.child(event.getEventId()).child("eventDate").setValue(holder.binding.eventDate.getText().toString().trim());
+                        event.setEventDate(holder.binding.eventDate.getText().toString().trim());
                     }
 
                     // Проверка, что поле места мероприятия не пустое
                     if (!(holder.binding.eventLocation.getText().toString().trim().length() == 0)) {
                         eventsRef.child(event.getEventId()).child("eventPlace").setValue(holder.binding.eventLocation.getText().toString().trim());
+                        event.setEventPlace(holder.binding.eventLocation.getText().toString().trim());
                     }
 
                     notifyDataSetChanged();
