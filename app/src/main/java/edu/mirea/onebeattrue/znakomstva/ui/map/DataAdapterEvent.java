@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import edu.mirea.onebeattrue.znakomstva.MainActivity;
+import edu.mirea.onebeattrue.znakomstva.R;
 import edu.mirea.onebeattrue.znakomstva.databinding.ItemEventBinding;
 import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 
@@ -78,6 +79,37 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
 
         // установка цвета мероприятия в зависимости от интересов пользователя
         String eventCategory = event.getEventCategory();
+
+        // Установка иконки мероприятия
+        switch (eventCategory) {
+            case "music":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_music_event);
+                break;
+            case "sport":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_sport_event);
+                break;
+            case "art":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_art_event);
+                break;
+            case "movies":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_movie_event);
+                break;
+            case "education":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_education_event);
+                break;
+            case "social":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_social_event);
+                break;
+            case "culinary":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_culinary_event);
+                break;
+            case "technology":
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_technology_event);
+                break;
+            default:
+                holder.binding.eventIcon.setImageResource(R.drawable.ic_no_category_event);
+                break;
+        }
 
         interestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -4,6 +4,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
+    <ImageView
+        android:layout_margin="8dp"
+        android:id="@+id/event_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_no_category_event"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
         android:layout_margin="8dp"
         android:id="@+id/visitors"
