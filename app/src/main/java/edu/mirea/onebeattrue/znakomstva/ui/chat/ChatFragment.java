@@ -5,9 +5,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -33,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import edu.mirea.onebeattrue.znakomstva.R;
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentChatBinding;
 
 public class ChatFragment extends Fragment {
@@ -61,6 +65,19 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+        // потеря фокуса ввода сообщения при нажатии кнопки назад
+        binding.messageEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.messageEditText.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // установка имени пользователя и аватарки
         //------------------------------------------------------------------------------------------
