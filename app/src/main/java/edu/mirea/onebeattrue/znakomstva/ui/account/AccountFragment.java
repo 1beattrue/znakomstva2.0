@@ -357,6 +357,9 @@ public class AccountFragment extends Fragment {
         // Инициализация ConnectivityManager
         connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        // Перенос прогресс бара на передний план
+        binding.progressBarAccount.bringToFront();
+
         // Инициализация NetworkCallback
         networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override

@@ -158,6 +158,9 @@ public class ChatFragment extends Fragment {
         // Инициализация ConnectivityManager
         connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        // Перенос прогресс бара на передний план
+        binding.progressBarChat.bringToFront();
+
         // Инициализация NetworkCallback
         networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override

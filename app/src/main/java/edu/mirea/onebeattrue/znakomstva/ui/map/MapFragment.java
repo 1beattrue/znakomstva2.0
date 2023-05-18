@@ -101,6 +101,9 @@ public class MapFragment extends Fragment {
         // Инициализация ConnectivityManager
         connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        // Перенос прогресс бара на передний план
+        binding.progressBarMap.bringToFront();
+
         // Инициализация NetworkCallback
         networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override

@@ -5,9 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.chat.ChatFragment">
+    tools:context=".ui.chat.ChatFragment" >
 
     <ProgressBar
+
         android:id="@+id/progressBarChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +50,7 @@
                 android:backgroundTint="@color/white"
                 android:id="@+id/messageEditText"
                 android:hint="@string/type_your_message_here"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:inputType="textMultiLine"
                 android:maxLines="3"
                 android:minLines="1"

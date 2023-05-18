@@ -105,13 +105,17 @@
         app:layout_constraintEnd_toEndOf="parent" >
 
         <com.google.android.material.button.MaterialButton
+            android:backgroundTint="@color/white"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/red"
             android:layout_margin="2dp"
             app:cornerRadius="8dp"
             android:layout_weight="1"
             android:id="@+id/deleteEventButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/event_delete" />
+            android:text="@string/event_delete"
+            android:textColor="@color/red"/>
 
         <com.google.android.material.button.MaterialButton
             android:layout_margin="2dp"
