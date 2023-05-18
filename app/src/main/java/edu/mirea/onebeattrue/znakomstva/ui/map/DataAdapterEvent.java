@@ -119,7 +119,8 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                     boolean greenColor = Boolean.TRUE.equals(dataSnapshot.child(eventCategory).getValue(Boolean.class));
                     // Установка цвета заднего фона в зависимости от переменной greenColor
                     if (greenColor) {
-                        holder.itemView.setBackgroundColor(Color.GREEN);
+                        int colorGray = Color.parseColor("#DFDFDF");
+                        holder.itemView.setBackgroundColor(colorGray);
                     } else {
                         holder.itemView.setBackgroundColor(Color.WHITE);
                     }
