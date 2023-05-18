@@ -189,9 +189,15 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 binding.userNameEditTextView.setText("");
+
                 binding.userNameTextView.setVisibility(View.GONE);
+                binding.userNameTextViewLayout.setVisibility(View.GONE);
+
                 binding.editUserNameBtn.setVisibility(View.GONE);
+
                 binding.userNameEditTextView.setVisibility(View.VISIBLE);
+                binding.userNameEditTextViewLayout.setVisibility(View.VISIBLE);
+
                 binding.saveUserNameBtn.setVisibility(View.VISIBLE);
             }
         });
@@ -208,9 +214,15 @@ public class AccountFragment extends Fragment {
                     usersRef.child(user.getUid()).child("userName").setValue(username);
 
                     binding.userNameTextView.setText(username);
+
                     binding.userNameEditTextView.setVisibility(View.GONE);
+                    binding.userNameEditTextViewLayout.setVisibility(View.GONE);
+
                     binding.saveUserNameBtn.setVisibility(View.GONE);
+
                     binding.userNameTextView.setVisibility(View.VISIBLE);
+                    binding.userNameTextViewLayout.setVisibility(View.VISIBLE);
+
                     binding.editUserNameBtn.setVisibility(View.VISIBLE);
                     Toast.makeText(getContext(), "Username changed successfully", Toast.LENGTH_SHORT).show();
                 }

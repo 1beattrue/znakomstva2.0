@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="15dp"
+    android:padding="16dp"
     android:layout_height="match_parent"
     tools:context=".ui.auth.Login">
 
     <TextView
+        style="@style/TitleTextStyle"
+
         android:text="@string/login"
-        android:textSize="25sp"
-        android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
@@ -33,7 +33,8 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true" >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
             android:singleLine="true"
@@ -50,17 +51,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        app:cornerRadius="8dp"
+
         android:id="@+id/btn_login"
         android:text="@string/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="20sp"
+        style="@style/NormalTextStyle"
+
         android:gravity="center"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="20dp"
         android:id="@+id/RegisterNow"
         android:text="@string/click_to_register"
         android:layout_width="match_parent"
