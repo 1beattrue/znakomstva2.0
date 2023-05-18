@@ -14,6 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
+        style="@style/SecondaryTextStyle"
+        android:textSize="16dp"
         android:layout_margin="8dp"
         android:id="@+id/visitors"
         android:layout_width="wrap_content"
@@ -32,47 +34,64 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
-        <EditText
-            android:id="@+id/eventTitle"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:text="@string/event_name"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:focusable="false"
+                android:id="@+id/eventTitle"
+                android:hint="@string/event_name"
+                android:text="@string/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:focusable="false"
-            android:id="@+id/eventDescription"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_description"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:focusable="false"
+                android:id="@+id/eventDescription"
+                android:hint="@string/event_description"
+                android:text="@string/event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:enabled="false"
+            style="@style/NormalTextStyle"
             android:id="@+id/eventTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/event_time"
-            android:textSize="24sp" />
+            android:textAlignment="center"
+            android:textSize="24sp"/>
 
         <TextView
-            android:enabled="false"
             android:id="@+id/eventDate"
+            style="@style/NormalTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/event_date"
+            android:textAlignment="center"
             android:textSize="24sp" />
 
-        <EditText
-            android:focusable="false"
-            android:id="@+id/eventLocation"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_place"
-            android:textSize="16sp" />
-
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:focusable="false"
+                android:id="@+id/eventLocation"
+                android:hint="@string/event_place"
+                android:text="@string/event_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -85,33 +104,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
             android:layout_weight="1"
             android:id="@+id/deleteEventButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/event_delete" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
             android:layout_weight="1"
             android:id="@+id/editEventButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/event_edit" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
             android:layout_weight="1"
             android:id="@+id/joinEventButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/event_join" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:backgroundTint="@color/white"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/black"
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
             android:visibility="gone"
             android:layout_weight="1"
             android:id="@+id/leaveEventButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="@string/event_leave" />
 
     </LinearLayout>
