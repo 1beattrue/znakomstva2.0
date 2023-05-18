@@ -149,7 +149,7 @@ public class EventActivity extends AppCompatActivity {
 
                 // Проверка, что поле места мероприятия не пустое
                 if (binding.editTextPlace.getText().toString().isEmpty() || binding.editTextPlace.getText().toString().trim().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "Enter event place", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Enter event location", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
