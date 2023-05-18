@@ -120,10 +120,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:backgroundTint="@color/black"
-        android:textColor="@color/white"
         app:cornerRadius="8dp"
-
 
         android:layout_margin="8dp"
         android:id="@+id/addNewEventButton"
