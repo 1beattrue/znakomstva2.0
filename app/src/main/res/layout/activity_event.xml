@@ -14,109 +14,97 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_marginBottom="8dp"
-            android:id="@+id/textViewName"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_name"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:minLines="1"
+                android:hint="Event name" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:layout_marginBottom="8dp"
-            android:id="@+id/editTextName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:maxLines="3"
-            android:minLines="1"
-            android:hint="Enter event name"/>
 
-        <TextView
-            android:layout_marginBottom="8dp"
-            android:id="@+id/textViewLocation"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_description"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:layout_marginBottom="8dp"
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:maxLines="3"
-            android:minLines="1"
-            android:hint="Enter description"/>
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_marginBottom="8dp"
+                android:id="@+id/editTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:minLines="1"
+                android:hint="Event description" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            style="@style/NormalTextStyle"
             android:layout_marginBottom="8dp"
             android:id="@+id/textViewTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/event_time"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/event_time" />
 
         <TextView
+            style="@style/NormalTextStyle"
             android:id="@+id/editTextTime"
-            android:textSize="24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Set event time" />
+            android:text="Set event time"
+            android:textAlignment="center" />
 
         <TextView
+            style="@style/NormalTextStyle"
             android:layout_marginBottom="8dp"
             android:id="@+id/textViewDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event date"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="Event date" />
 
         <TextView
-            android:layout_marginBottom="8dp"
-            android:textSize="24dp"
+            style="@style/NormalTextStyle"
             android:id="@+id/editTextDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Set event date" />
-
-        <TextView
             android:layout_marginBottom="8dp"
-            android:id="@+id/textViewPlace"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_place"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="Set event date"
+            android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/editTextPlace"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:maxLines="3"
-            android:minLines="1"
-            android:hint="Enter event location" />
+            android:layout_height="wrap_content" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPlace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:minLines="1"
+                android:hint="Event location" >
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            style="@style/NormalTextStyle"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:id="@+id/textViewCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/category"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/category" />
 
         <Spinner
             android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="48dp" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
