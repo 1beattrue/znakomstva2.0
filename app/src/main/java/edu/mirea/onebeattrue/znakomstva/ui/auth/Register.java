@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -40,6 +41,32 @@ public class Register extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
+
+        // потеря фокуса ввода email при нажатии кнопки назад
+        binding.email.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.email.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // потеря фокуса ввода password при нажатии кнопки назад
+        binding.password.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.password.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
