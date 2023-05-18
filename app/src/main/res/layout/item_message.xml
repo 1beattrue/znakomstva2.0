@@ -18,7 +18,6 @@
             android:id="@+id/chatCardView"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            app:cardBackgroundColor="@color/black"
             app:cardCornerRadius="90dp">
 
             <ImageView
