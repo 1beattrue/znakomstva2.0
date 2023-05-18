@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +47,47 @@ public class EventActivity extends AppCompatActivity {
         binding = ActivityEventBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
+
+
+        // потеря фокуса ввода name при нажатии кнопки назад
+        binding.editTextName.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.editTextName.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // потеря фокуса ввода description при нажатии кнопки назад
+        binding.editTextDescription.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.editTextDescription.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // потеря фокуса ввода location при нажатии кнопки назад
+        binding.editTextPlace.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    // Пользователь нажал кнопку "назад"
+                    binding.editTextPlace.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         // получение даты мероприятия
         binding.editTextDate.setOnClickListener(new View.OnClickListener() {
