@@ -32,6 +32,7 @@
 
     <!-- Строка ввода сообщения и кнопка отправки -->
     <LinearLayout
+        android:background="@color/gray2"
         android:layout_marginBottom="56dp"
         android:id="@+id/messageInputLayout"
         android:layout_width="match_parent"
@@ -40,13 +41,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="6">
 
         <com.google.android.material.textfield.TextInputLayout
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3">
+            android:layout_weight="5">
             <com.google.android.material.textfield.TextInputEditText
+
                 android:backgroundTint="@color/white"
                 android:id="@+id/messageEditText"
                 android:hint="@string/type_your_message_here"
@@ -59,16 +63,16 @@
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            app:cornerRadius="0dp"
-            android:background="@color/black"
+        <ImageButton
+            android:layout_margin="8dp"
 
+            android:src="@drawable/ic_send"
+            android:background="@drawable/send_button_shape"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:id="@+id/sendButton"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/send" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
