@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">znakomstva</string>
+    <string name="app_name">Events</string>
     <string name="title_account">Profile</string>
     <string name="title_map">Events</string>
     <string name="title_chat">Chat</string>
