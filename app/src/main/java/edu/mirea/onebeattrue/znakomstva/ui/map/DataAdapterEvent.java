@@ -7,8 +7,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.provider.CalendarContract;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -251,6 +253,13 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
 
         // Установка слушателя кликов для кнопки редактирования
         if (event.isEditMode()) {
+            // Установка стиля кнопки
+            holder.binding.editEventButton.setBackgroundColor(Color.BLACK);
+            holder.binding.editEventButton.setTextColor(Color.WHITE);
+
+            holder.binding.editEventButton.setStrokeWidth(0);
+
+
             holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -267,6 +276,19 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
                 }
             });
         } else {
+            // Установка стиля кнопки
+            holder.binding.editEventButton.setBackgroundColor(Color.WHITE);
+            holder.binding.editEventButton.setTextColor(Color.BLACK);
+
+            // Перевод dp в px
+            int strokeWidthDp = 2;
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            int strokeWidthPx = Math.round(strokeWidthDp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+            holder.binding.editEventButton.setStrokeWidth(strokeWidthPx);
+            holder.binding.editEventButton.setStrokeColor(ColorStateList.valueOf(Color.BLACK));
+
+
             holder.binding.editEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
