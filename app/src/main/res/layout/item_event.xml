@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:focusable="false"
                     android:id="@+id/eventTitle"
                     android:hint="@string/event_name"
                     android:text="@string/event_name"
@@ -63,6 +64,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventDescription"
+                    android:focusable="false"
                     android:hint="@string/event_description"
                     android:text="@string/event_description"
                     android:layout_width="match_parent"
@@ -95,6 +97,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:focusable="false"
                     android:id="@+id/eventLocation"
                     android:hint="@string/event_place"
                     android:text="@string/event_place"
