@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import edu.mirea.onebeattrue.znakomstva.R;
 import edu.mirea.onebeattrue.znakomstva.databinding.FragmentAccountBinding;
 import edu.mirea.onebeattrue.znakomstva.ui.auth.Login;
 import edu.mirea.onebeattrue.znakomstva.ui.chat.ChatMessage;
@@ -123,6 +124,7 @@ public class AccountFragment extends Fragment {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Обработка ошибок получения значения аватарки
+                    binding.avatar.setImageResource(R.drawable.default_profile_picture);
                 }
             };
 
@@ -143,6 +145,7 @@ public class AccountFragment extends Fragment {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Обработка ошибок получения значения имени пользователя
+                    binding.userNameTextView.setText("noname");
                 }
             };
 
@@ -181,6 +184,14 @@ public class AccountFragment extends Fragment {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     // Обработка ошибки чтения данных из базы данных
+                    binding.checkBox1.setChecked(false);
+                    binding.checkBox2.setChecked(false);
+                    binding.checkBox3.setChecked(false);
+                    binding.checkBox4.setChecked(false);
+                    binding.checkBox5.setChecked(false);
+                    binding.checkBox6.setChecked(false);
+                    binding.checkBox7.setChecked(false);
+                    binding.checkBox8.setChecked(false);
                 }
             });
         }
@@ -284,6 +295,7 @@ public class AccountFragment extends Fragment {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // Обработка ошибки загрузки аватарки
+                                    // ну ошибка и ошибка, чо бухтеть то
                                 }
                             });
                         }
