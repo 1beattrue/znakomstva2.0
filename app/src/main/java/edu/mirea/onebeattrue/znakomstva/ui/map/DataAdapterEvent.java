@@ -256,6 +256,7 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             // Установка стиля кнопки
             holder.binding.editEventButton.setBackgroundColor(Color.BLACK);
             holder.binding.editEventButton.setTextColor(Color.WHITE);
+            holder.binding.editEventButton.setText(R.string.edit);
 
             holder.binding.editEventButton.setStrokeWidth(0);
 
@@ -279,6 +280,14 @@ public class DataAdapterEvent extends RecyclerView.Adapter<ViewHolderEvent> {
             // Установка стиля кнопки
             holder.binding.editEventButton.setBackgroundColor(Color.WHITE);
             holder.binding.editEventButton.setTextColor(Color.BLACK);
+            holder.binding.editEventButton.setText(R.string.save);
+
+            // включение возможности редактирования event'a
+            holder.binding.eventTitle.setFocusableInTouchMode(true);
+            holder.binding.eventDescription.setFocusableInTouchMode(true);
+            holder.binding.eventTime.setEnabled(true);
+            holder.binding.eventDate.setEnabled(true);
+            holder.binding.eventLocation.setFocusableInTouchMode(true);
 
             // Перевод dp в px
             int strokeWidthDp = 2;
